@@ -9,7 +9,10 @@
   body,
 ) = {
   // 页面设置: A4, 页边距与Word模板一致
-  set page(paper: "a4", margin: (top: 2.5cm, bottom: 2.5cm, left: 3.2cm, right: 3.2cm))
+  set page(
+    paper: "a4",
+    margin: (top: 2.5cm, bottom: 2.5cm, left: 3.2cm, right: 3.2cm),
+  )
   set text(font: ("Times New Roman", "SimSun"), lang: "zh", region: "cn")
   set par(leading: 1.0em, first-line-indent: (amount: 2em, all: true))
   set heading(numbering: none)
@@ -56,14 +59,31 @@
       v(0.3cm)
     }
     v(1fr)
-    for (i, (name, id)) in members.enumerate() {
-      if i == 0 {
-        align(right, text(size: 14pt)[小组成员：#name（学号：#id）])
-      } else {
-        align(right, text(size: 14pt)[#name（学号：#id）])
-      }
-      v(0.2cm)
-    }
+    let name-box(name) = {
+      let chars = name.clusters()
+    
+      box(width: 3em)[
+        #if chars.len() == 2 {
+          // 两个字的名字，中间补一个汉字宽度
+          chars.at(0) + h(1em) + chars.at(1)
+        } else {
+          // 三个字或其他情况，直接输出
+          name
+        }
+      ]
+}
+
+for (i, (name, id)) in members.enumerate() {
+  let label = if i == 0 { [小组成员：] } else { [] }
+
+  align(right)[
+    #text(size: 14pt)[
+      #box(width: 5em)[#label]#name-box(name)（学号：#id）
+    ]
+  ]
+
+  v(0.2cm)
+}
     v(0.5cm)
     align(right, text(size: 14pt)[完成日期：#date])
     v(1.5cm)
@@ -86,6 +106,14 @@
   }
 
   // ===== 正文 =====
+  set page(
+    paper: "a4",
+    margin: (top: 2.5cm, bottom: 2.5cm, left: 3.2cm, right: 3.2cm),
+    numbering: "1",
+    number-align: center + bottom,
+  )
+
+  counter(page).update(1)
   body
 }
 
@@ -99,6 +127,21 @@
 #let exp-section(number, title) = {
   let prefix = section-titles.at(number - 1)
   heading(level: 2)[#prefix、#h(0.25em)#title]
+}
+
+#let exp-chapter(title) = {
+  set par(first-line-indent: 0em)
+  v(0.3em)
+
+  align(center)[
+    #text(
+      size: 13.5pt,
+      weight: "bold",
+      font: ("Times New Roman", "SimSun"),
+    )[#title]
+  ]
+
+  v(0.2em)
 }
 
 // 三线表 (CVPR 风格)
