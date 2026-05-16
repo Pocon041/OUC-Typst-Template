@@ -7,7 +7,7 @@
 #show: report.with(
   title: "编译原理实验报告",
   experiments: (exp1, exp2),
-  members: (("操淳", "23020007002"),("李曾洋","23020007055"),("赵宇浩","23060021075"),("陈中浩","23020007009")),
+  members: (("AA", "zzzzxxxx"),("VVV","zzzzxxxx"),("BBB","zzzzxxxx"),("CCC","zzzzxxxx")),
   date: "2026年5月16日",
 )
 
